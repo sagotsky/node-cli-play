@@ -8,4 +8,5 @@ var EsMenu = require('esmenu'),
   Spotifyr = require('spotifyr')
 
 let s = new Spotifyr(EsMenu)
+//s.play_pause()
 s.search()
