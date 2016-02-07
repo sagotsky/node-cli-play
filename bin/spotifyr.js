@@ -11,7 +11,7 @@ var EsMenu = require('esmenu'),
 let s = new Spotifyr(EsMenu)
 let arg = process.argv[2]
 
-if (['next', 'previous', 'play_pause', 'pause', 'stop', 'play'].indexOf(arg) > -1) {
+if (['next', 'previous', 'play_pause', 'pause', 'stop', 'play', 'metadata'].indexOf(arg) > -1) {
   s[arg]()
 } else {
   s.search()
