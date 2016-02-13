@@ -14,22 +14,9 @@ var argv = require('yargs')
   .require(1)
   .strict(true)
 
-  .option('v', {
-    alias: 'verbose', 
-    describe: 'show status after track change', 
-    default: false,
-    requiresArg: false,
-    type: 'boolean'
-  })
 
-  .option('q', {
-    alias: 'query', 
-    describe: 'Query string for search commands.  If blank, you will be prompted.', 
-    type: 'string',
-    requiresArg: true,
-    default: ''
-  })
 
+  //.group('next', 'Player commands') would be nice if this worked for commands
   .command('next'       , 'Play next song'     , player_cmd)
   .command('previous'   , 'Play previous song' , player_cmd)
   .command('play_pause' , 'Toggle play/pause'  , player_cmd)
@@ -38,24 +25,43 @@ var argv = require('yargs')
   .command('play'       , 'Play'               , player_cmd)
   .command('status'     , 'Show current song'  , player_cmd)
 
-  .command('search', 'Search spotify for any type of media and play it.', (yargs) => {
-    search_cmd(yargs)
-  })
+  .command('search', 'Search spotify for any type of media and play it.', search_cmd)
+  .command('artist', 'Arist search', search_cmd)
+  .command('album', 'Album search', search_cmd)
+  .command('track', 'Track search', search_cmd)
 
   .argv
 
 function player_cmd(yargs) {
-  //init client with special opts here?
+  yargs.option('v', {
+    alias: 'verbose', 
+    describe: 'show status after track change', 
+    default: false,
+    requiresArg: false,
+    boolean: true
+  })
+    .usage('Player commands - next, previous, play_pause, play, pause, stop, status - control playback of spotify client.')
+
   let args = yargs.argv
   let cmd = args._[0]
+
   client[cmd]()
-  console.log(args)
-  if (args['verbose']) {
-    client.metadata
+
+  if (args.verbose && cmd != 'status') {
+    client.status()
   }
 }
 
 function search_cmd(yargs) {
-  console.log(yargs.argv)
+  yargs.option('q', {
+    alias: 'query', 
+    describe: 'Query string for search commands.  If blank, you will be prompted.', 
+    string: true,
+    requiresArg: true,
+    default: ''
+  })
+    .usage('Search spotify for albums, artists, tracks, etc and play them.  Use dmenu to search and select or use -q to specify a query string.')
+
+  let args = yargs.argv
+  let cmd = args._[0]
 }
-console.log(argv)
