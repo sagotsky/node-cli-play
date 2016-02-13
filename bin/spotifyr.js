@@ -7,12 +7,32 @@ require('app-module-path').addPath(__dirname + '/../lib')
 var EsMenu = require('esmenu'),
   Spotifyr = require('spotifyr')
 
-//omg we need better arg parsing
-let s = new Spotifyr(EsMenu)
-let arg = process.argv[2]
+function help() {
+  console.log('#TODO: write some help message.  hopefully yargs can provide them')
+}
 
-if (['next', 'previous', 'play_pause', 'pause', 'stop', 'play', 'metadata'].indexOf(arg) > -1) {
-  s[arg]()
-} else {
-  s.search()
+let argv = require('yargs').argv
+let cmd = argv._[0]
+let client = new Spotifyr(EsMenu)
+// console.log(argv)
+//omg we need better arg parsing
+
+switch (cmd) {
+  case 'next':
+  case 'previous':
+  case 'play_pause':
+  case 'pause':
+  case 'stop':
+  case 'play':
+  case 'metadata':
+    client[cmd]()
+    break
+
+  case 'search':
+    client.search()
+    break
+
+  default:
+    help()
+    break
 }
