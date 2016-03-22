@@ -23,7 +23,8 @@ var argv = require('yargs')
   .command('pause'      , 'Pause playback'     , player_cmd)
   .command('stop'       , 'Stop playback'      , player_cmd)
   .command('play'       , 'Play'               , player_cmd)
-  .command('status'     , 'Show current song'  , player_cmd)
+
+  .command('status'     , 'Show current song'  , status_cmd)
 
   .command('search', 'Search spotify for any type of media and play it.', search_cmd)
   .command('artist', 'Arist search', search_cmd)
@@ -31,6 +32,17 @@ var argv = require('yargs')
   .command('track', 'Track search', search_cmd)
 
   .argv
+
+function status_cmd(yargs) {
+  yargs.option('f', {
+    alias: 'fields', 
+    describe: 'specify field(s) to show', 
+    requiresArg: true,
+  }).usage("Status - Get currently playing song's metadata")
+
+  let fields = yargs.argv['fields']
+  client.status(fields ? fields.split(',') : undefined)
+}
 
 function player_cmd(yargs) {
   yargs.option('v', {
@@ -40,14 +52,14 @@ function player_cmd(yargs) {
     requiresArg: false,
     boolean: true
   })
-    .usage('Player commands - next, previous, play_pause, play, pause, stop, status - control playback of spotify client.')
+    .usage('Player commands - next, previous, play_pause, play, pause, stop - control playback of spotify client.')
 
   let args = yargs.argv
   let cmd = args._[0]
 
   client[cmd]()
 
-  if (args.verbose && cmd != 'status') {
+  if (args.verbose) {
     client.status()
   }
 }
