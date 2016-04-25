@@ -28,6 +28,7 @@
     "argv": "0.0.2",
     "bluebird": "^3.2.1",
     "dbus-native": "^0.2.0",
+    "lodash": "^4.11.1",
     "minimist": "^1.2.0",
     "path": "^0.12.7",
     "spotify": "^0.3.0",

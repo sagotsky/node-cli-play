@@ -14,9 +14,6 @@ var argv = require('yargs')
   .require(1)
   .strict(true)
 
-
-
-  //.group('next', 'Player commands') would be nice if this worked for commands
   .command('next'       , 'Play next song'     , player_cmd)
   .command('previous'   , 'Play previous song' , player_cmd)
   .command('play_pause' , 'Toggle play/pause'  , player_cmd)
@@ -64,16 +61,32 @@ function player_cmd(yargs) {
   }
 }
 
+// does acquiring a search term from dmenu fit in bin in lib?
 function search_cmd(yargs) {
   yargs.option('q', {
     alias: 'query', 
     describe: 'Query string for search commands.  If blank, you will be prompted.', 
     string: true,
-    requiresArg: true,
-    default: ''
+    //requiresArg: true,
+    default: 'Rush' //todo get something from esmenu
   })
     .usage('Search spotify for albums, artists, tracks, etc and play them.  Use dmenu to search and select or use -q to specify a query string.')
 
   let args = yargs.argv
   let cmd = args._[0]
+  let types = []
+  switch (cmd) {
+    case 'artist':
+      types = ['artist']; 
+      break;
+    case 'album':
+      types = ['album'];
+      break;
+    default:
+      types = ['artist', 'album', 'track']
+  }
+
+  client['search'](args['query'], types)
+  // console.log('TODO: all search functions')
+
 }
